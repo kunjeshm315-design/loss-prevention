@@ -1,7 +1,18 @@
 'use client';
 import { useState } from 'react';
 
-const initialProducts = [
+interface Product {
+  _id: string;
+  name: string;
+  category: string;
+  quantity: number;
+  expiryDate: Date;
+  ourPrice: number;
+  competitorPrice: number;
+  riskScore: number;
+}
+
+const initialProducts: Product[] = [
   { _id: '1', name: 'Amul Milk 1L', category: 'Dairy', quantity: 50, expiryDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), ourPrice: 60, competitorPrice: 51, riskScore: 90 },
   { _id: '2', name: 'Nestle KitKat 12pk', category: 'Confectionery', quantity: 35, expiryDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), ourPrice: 240, competitorPrice: 199, riskScore: 88 },
   { _id: '3', name: 'Maggi Noodles 12pk', category: 'FMCG', quantity: 100, expiryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), ourPrice: 180, competitorPrice: 160, riskScore: 82 },
@@ -15,7 +26,7 @@ const initialProducts = [
 ];
 
 export default function Home() {
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
 
   const applyMarkdown = (id: string) => {
     setProducts(prev => prev.map(p => {
@@ -25,14 +36,14 @@ export default function Home() {
     }));
   };
 
-  const getRiskColor = (score) => {
+  const getRiskColor = (score: number) => {
     if (score >= 80) return 'bg-red-100 text-red-800';
     if (score >= 50) return 'bg-orange-100 text-orange-800';
     if (score >= 25) return 'bg-yellow-100 text-yellow-800';
     return 'bg-green-100 text-green-800';
   };
 
-  const getRiskLabel = (score) => {
+  const getRiskLabel = (score: number) => {
     if (score >= 80) return '🔴 Critical';
     if (score >= 50) return '🟠 High';
     if (score >= 25) return '🟡 Medium';
@@ -53,7 +64,6 @@ export default function Home() {
             <p className="text-gray-500 mt-1">Real-time inventory risk monitoring</p>
           </div>
         </div>
-
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-xl p-4 shadow">
             <p className="text-gray-500 text-sm">Total Products</p>
@@ -68,7 +78,6 @@ export default function Home() {
             <p className="text-3xl font-bold text-orange-600">₹{potentialLoss.toLocaleString()}</p>
           </div>
         </div>
-
         <div className="bg-white rounded-xl shadow overflow-hidden">
           <table className="w-full">
             <thead className="bg-gray-100">
@@ -84,7 +93,7 @@ export default function Home() {
             </thead>
             <tbody>
               {products.map((product) => {
-                const daysLeft = Math.ceil((new Date(product.expiryDate) - new Date()) / (1000 * 60 * 60 * 24));
+                const daysLeft = Math.ceil((new Date(product.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
                 return (
                   <tr key={product._id} className="border-t hover:bg-gray-50">
                     <td className="p-4 font-semibold text-gray-900">{product.name}</td>
