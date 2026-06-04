@@ -17,7 +17,7 @@ const initialProducts = [
 export default function Home() {
   const [products, setProducts] = useState(initialProducts);
 
-  const applyMarkdown = (id) => {
+  const applyMarkdown = (id: string) => {
     setProducts(prev => prev.map(p => {
       if (p._id !== id) return p;
       const newPrice = Math.floor(p.competitorPrice * 0.98);
